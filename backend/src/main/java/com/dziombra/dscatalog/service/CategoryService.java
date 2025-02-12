@@ -3,6 +3,7 @@ package com.dziombra.dscatalog.service;
 import com.dziombra.dscatalog.dto.CategoryDTO;
 import com.dziombra.dscatalog.entities.Category;
 import com.dziombra.dscatalog.repositories.CategoryRepository;
+import com.dziombra.dscatalog.service.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDTO findById (Long id) {
-        Category result = repository.findById(id).get();
+        Category result = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Recurso não encontrado"));
         return new CategoryDTO(result);
     }
 
