@@ -3,13 +3,13 @@ package com.dziombra.dscatalog.service;
 import com.dziombra.dscatalog.dto.CategoryDTO;
 import com.dziombra.dscatalog.entities.Category;
 import com.dziombra.dscatalog.repositories.CategoryRepository;
-import com.dziombra.dscatalog.service.exceptions.EntityNotFoundException;
+import com.dziombra.dscatalog.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CategoryService {
@@ -25,7 +25,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDTO findById (Long id) {
-        Category result = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Recurso não encontrado"));
+        Category result = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
         return new CategoryDTO(result);
     }
 
@@ -35,5 +35,18 @@ public class CategoryService {
         entity.setName(dto.getName());
         entity = repository.save(entity);
         return new CategoryDTO(entity);
+    }
+
+    @Transactional
+    public CategoryDTO update ( Long id, CategoryDTO dto) {
+        try {
+            Category entity = repository.getReferenceById(id);
+            entity.setName(dto.getName());
+            entity = repository.save(entity);
+            return new CategoryDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found: " + id);
+        }
+
     }
 }
