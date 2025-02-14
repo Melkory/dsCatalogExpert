@@ -3,10 +3,13 @@ package com.dziombra.dscatalog.service;
 import com.dziombra.dscatalog.dto.CategoryDTO;
 import com.dziombra.dscatalog.entities.Category;
 import com.dziombra.dscatalog.repositories.CategoryRepository;
+import com.dziombra.dscatalog.service.exceptions.DatabaseException;
 import com.dziombra.dscatalog.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -48,5 +51,18 @@ public class CategoryService {
             throw new ResourceNotFoundException("Id not found: " + id);
         }
 
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete ( Long id ) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+        try {
+            repository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial");
+        }
     }
 }
