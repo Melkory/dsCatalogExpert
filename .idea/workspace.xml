@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8d15e6dc-0e2c-4367-b79b-5f02c2c5b7c2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../test-junit/src/main/java/org/example/entities/Account.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../test-junit/src/main/java/org/example/tests/entities/AccountTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ConsultaVendas/desafio-consulta-vendas" beforeDir="false" afterPath="$PROJECT_DIR$/../ConsultaVendas/desafio-consulta-vendas" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DesafioConsultaVendas/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../DesafioConsultaVendas/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DesafioConsultaVendas/desafio-consulta-vendas" beforeDir="false" afterPath="$PROJECT_DIR$/../DesafioConsultaVendas/desafio-consulta-vendas" afterDir="false" />
@@ -32,14 +34,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "T:/Carlos/Projetos/dscatalog/backend"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;T:/Carlos/Projetos/dscatalog/backend&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="dscatalog" />
