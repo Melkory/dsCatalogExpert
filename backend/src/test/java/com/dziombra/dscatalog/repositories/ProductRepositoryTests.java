@@ -1,5 +1,6 @@
 package com.dziombra.dscatalog.repositories;
 
+import com.dziombra.dscatalog.dto.ProductDTO;
 import com.dziombra.dscatalog.entities.Product;
 import com.dziombra.dscatalog.tests.Factory;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,7 @@ public class ProductRepositoryTests {
 
     private long exintingId;
     private long countTotalProducts;
+    private long nonExintingId;
 
     @Autowired
     private ProductRepository repository;
@@ -22,6 +24,7 @@ public class ProductRepositoryTests {
     @BeforeEach
     void setUp () throws Exception {
         exintingId = 1L;
+        nonExintingId = 1000L;
         countTotalProducts = 25L;
     }
 
@@ -33,6 +36,7 @@ public class ProductRepositoryTests {
         Assertions.assertFalse(result.isPresent());
     }
 
+    @Test
     public void saveShouldPersistWithAutoincrementWhenIdIsNull () {
         Product product = Factory.createProduct();
         product.setId(null);
@@ -42,6 +46,18 @@ public class ProductRepositoryTests {
 
         Assertions.assertNotNull(product.getId());
         Assertions.assertEquals(countTotalProducts + 1, product.getId());
+    }
+
+    @Test
+    public void findByIdShouldReturnProductNotEmptyWhenIdExists () {
+        Optional<Product> result = repository.findById(exintingId);
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void findByIdShouldReturnProductEmptyWhenIdNotExists () {
+        Optional<Product> result = repository.findById(nonExintingId);
+        Assertions.assertTrue(result.isEmpty());
     }
 
 }
