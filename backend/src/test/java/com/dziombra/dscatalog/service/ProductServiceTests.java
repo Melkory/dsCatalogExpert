@@ -12,6 +12,8 @@ import org.mockito.Mockito;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.mockito.Mockito.*;
+
 @ExtendWith(SpringExtension.class)
 public class ProductServiceTests {
 
@@ -29,12 +31,12 @@ public class ProductServiceTests {
         existingId = 1L;
         nonExistingId = 1000L;
 
-        Mockito.when(repository.existsById(existingId)).thenReturn(true);
-        Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
+        when(repository.existsById(existingId)).thenReturn(true);
+        when(repository.existsById(nonExistingId)).thenReturn(false);
 
         //Mockito.when(repository.existsById(dependentId)).thenReturn(true);
 
-        Mockito.doThrow(EmptyResultDataAccessException.class)
+        doThrow(EmptyResultDataAccessException.class)
                 .when(repository).deleteById(nonExistingId);
 
 
@@ -46,7 +48,7 @@ public class ProductServiceTests {
             service.delete(existingId);
         });
 
-        Mockito.verify(repository, Mockito.times(1)).deleteById(existingId);
+        verify(repository, Mockito.times(1)).deleteById(existingId);
     }
 
     @Test
