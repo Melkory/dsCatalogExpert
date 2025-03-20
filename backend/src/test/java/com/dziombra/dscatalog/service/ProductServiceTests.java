@@ -1,18 +1,25 @@
 package com.dziombra.dscatalog.service;
 
+import com.dziombra.dscatalog.entities.Product;
 import com.dziombra.dscatalog.repositories.ProductRepository;
 import com.dziombra.dscatalog.service.exceptions.DatabaseException;
 import com.dziombra.dscatalog.service.exceptions.ResourceNotFoundException;
+import com.dziombra.dscatalog.tests.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -28,12 +35,18 @@ public class ProductServiceTests {
     private long existingId;
     private long nonExistingId;
     private long dependentId;
+    private PageImpl <Product> page;
+    private Product product;
 
     @BeforeEach
     void setUp () throws  Exception {
         existingId = 1L;
         nonExistingId = 2L;
         dependentId = 3L;
+        product = Factory.createProduct();
+        page = new PageImpl<>(List.of(product));
+
+        when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 
         doNothing().when(repository).deleteById(existingId);
         doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
