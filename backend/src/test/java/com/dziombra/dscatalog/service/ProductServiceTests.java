@@ -1,5 +1,6 @@
 package com.dziombra.dscatalog.service;
 
+import com.dziombra.dscatalog.dto.ProductDTO;
 import com.dziombra.dscatalog.entities.Product;
 import com.dziombra.dscatalog.repositories.ProductRepository;
 import com.dziombra.dscatalog.service.exceptions.DatabaseException;
@@ -15,11 +16,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -47,7 +51,9 @@ public class ProductServiceTests {
         page = new PageImpl<>(List.of(product));
 
         when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
-
+        when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+        when(repository.findById(existingId)).thenReturn(Optional.of(product));
+        when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
         doNothing().when(repository).deleteById(existingId);
         doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
 
@@ -82,6 +88,16 @@ public class ProductServiceTests {
         Assertions.assertThrows(DatabaseException.class, () -> {
             service.delete(dependentId);
         });
+    }
+
+    @Test
+    public void findAllPagedShouldReturnPage () {
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ProductDTO> result = service.findAllPaged(pageable);
+
+        Assertions.assertNotNull(result);
+        verify(repository, times(1)).findAll(pageable);
     }
 
 }
