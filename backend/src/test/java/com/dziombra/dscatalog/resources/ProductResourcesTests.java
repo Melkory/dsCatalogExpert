@@ -2,6 +2,7 @@ package com.dziombra.dscatalog.resources;
 
 import com.dziombra.dscatalog.dto.ProductDTO;
 import com.dziombra.dscatalog.service.ProductService;
+import com.dziombra.dscatalog.service.exceptions.DatabaseException;
 import com.dziombra.dscatalog.service.exceptions.ResourceNotFoundException;
 import com.dziombra.dscatalog.tests.Factory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,6 +38,7 @@ public class ProductResourcesTests {
 
     private Long existingId;
     private Long nonExistingId;
+    private Long dependentId;
     private ProductDTO productDTO;
     private PageImpl<ProductDTO> page;
 
@@ -48,6 +50,7 @@ public class ProductResourcesTests {
 
         existingId = 1L;
         nonExistingId = 2L;
+        dependentId = 3L;
 
         productDTO = Factory.createProductDto();
         page = new PageImpl<>(List.of(productDTO));
@@ -58,6 +61,10 @@ public class ProductResourcesTests {
 
         when(service.update(eq(existingId), any())).thenReturn(productDTO);
         when(service.update(eq(nonExistingId), any())).thenThrow(ResourceNotFoundException.class);
+
+        doNothing().when(service).delete(existingId);
+        doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
+        doThrow(DatabaseException.class).when(service).delete(dependentId);
 
     }
 
